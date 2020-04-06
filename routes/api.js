@@ -21,7 +21,7 @@ router.post('/aip/createOne', async (ctx, next) => {
             ...person
         })
     } else {
-        throw new APIError('create fail')
+        throw new APIError('EC1002', '未登录')
     }
 })
 
@@ -33,7 +33,7 @@ router.post('/aip/deletePerson', async (ctx, next) => {
             ...delPserson
         })
     } else {
-        throw new APIError('delete fail')
+        throw new APIError('EC1001', '参数错误')
     }
 })
 
