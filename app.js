@@ -8,6 +8,10 @@ const logger = require('koa-logger')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
+const api = require('./routes/api')
+
+// middleware
+const normalizeRest = require('./middleware/rest').normalizeRest
 
 // error handler
 onerror(app)
@@ -16,6 +20,8 @@ onerror(app)
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
+// exp rest layout
+app.use(normalizeRest())
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
@@ -35,6 +41,7 @@ app.use(async (ctx, next) => {
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+app.use(api.routes(), api.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
