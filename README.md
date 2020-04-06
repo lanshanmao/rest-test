@@ -10,10 +10,47 @@ REST API 编写需要注意以下几个问题：
 一、URI 如何设置
 
 其实 REST 并不规定 URI 格式，但在项目中使用时需要需要区分不同的 API。比如可以使用功能前缀命名：`/static/`、`/api/`；如果是大项目可以使用子域名进行区分
-`// 前缀以/api去做区分 normalizeRest: (prefix) => { const pathPrefix = prefix || '/api/' return async (ctx, next) => { // whether it starts with '/api/' if (/^\/api\//.test(pathPrefix)) { // bind rest normalize handle if (!ctx.rest){ ctx.rest = (data) => { ctx.response.type = 'application/json' ctx.response.body = data } // error handling try { await next() } catch (e) { // error code ctx.response.status = 400 ctx.response.type = 'application/json' ctx.response.body = { code: e.code || 'unknown error', msg: e.msg || '' } } } } else { await next() } } } `
+`
+// 前缀以/api去做区分
+normalizeRest: (prefix) => {
+        const pathPrefix = prefix || '/api/'
+        return async (ctx, next) => {
+            // whether it starts with '/api/'
+            if (/^\/api\//.test(pathPrefix)) {
+                // bind rest normalize handle
+                if (!ctx.rest){
+                    ctx.rest = (data) => {
+                        ctx.response.type = 'application/json'
+                        ctx.response.body = data
+                    }
+                    // error handling
+                    try {
+                        await next()
+                    } catch (e) {
+                        // error code
+                        ctx.response.status = 400
+                        ctx.response.type = 'application/json'
+                        ctx.response.body = {
+                            code: e.code || 'unknown error',
+                            msg: e.msg || ''
+                        }
+                    }
+                }
+            } else {
+                await next()
+            }
+        }
+    }
+`
 
 使用时按照
-`router.get('/aip/findAllPerson', async (ctx, next) => { await ctx.rest({ ...data.findAllPerson() }) })`
+`
+router.get('/aip/findAllPerson', async (ctx, next) => {
+    await ctx.rest({
+        ...data.findAllPerson()
+    })
+})
+`
 
 二、Error 收集、返回
 
