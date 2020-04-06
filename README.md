@@ -27,7 +27,7 @@ soa的一大特点是把HTTP协议当成了传输协议，忽略了HTTP协议中
 
 ##### REST实现
 编写一个中间件在每个接口返回时都执行依次reset
-`
+```
 // middleware
 async (ctx, next) => {
     //  重载rest
@@ -36,11 +36,11 @@ async (ctx, next) => {
         ctx.response.body = data
     }
 }
-`
+```
 ##### REST分类
 接口按照功能前缀去做区分 `/api/`
 
-`
+```
 // middleware
 const pathPrefix = prefix || '/api/'
 async (ctx, next) => {
@@ -52,10 +52,10 @@ async (ctx, next) => {
         }
     }
 }
-`
+```
 
 ##### REST 错误捕获
-`
+```
 // middleware
 const pathPrefix = prefix || '/api/'
 async (ctx, next) => {
@@ -82,7 +82,7 @@ function APIError(code, msg) {
     this.code = code || 'unknown error'
     this.msg = msg || ''
 }
-`
+```
 
 ### 总结
 REST请求消息设计：自定义资源URI+自定义参数+基础操作；响应消息设计：将静态资源返回给客户端客户端，HTTP消息作为应用协议而非传输协议
